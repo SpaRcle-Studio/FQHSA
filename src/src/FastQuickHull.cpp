@@ -107,47 +107,47 @@ hull::Hull convex_hull_(PointCloud &points, const ConvexHullContext &cntx,
   return hull;
 }
 
-std::vector<FacetIncidences>
-get_indices(const hull::Facets &faces,
-            const HullIndexVSPointCloudIndexMap &indices_map) {
-  std::vector<FacetIncidences> result;
-  result.reserve(faces.size());
-  for (const auto &face : faces) {
-    result.push_back(FacetIncidences{indices_map.find(face->vertexA)->second,
-                                     indices_map.find(face->vertexB)->second,
-                                     indices_map.find(face->vertexC)->second});
-  }
-  return result;
-}
+    std::vector<FacetIncidences>
+    get_indices(const hull::Facets &faces,
+                const HullIndexVSPointCloudIndexMap &indices_map) {
+      std::vector<FacetIncidences> result;
+      result.reserve(faces.size());
+      for (const auto &face : faces) {
+        result.push_back(FacetIncidences{indices_map.find(face->vertexA)->second,
+                                         indices_map.find(face->vertexB)->second,
+                                         indices_map.find(face->vertexC)->second});
+      }
+      return result;
+    }
 
-std::vector<hull::Coordinate> get_normals(const hull::Facets &faces) {
-  std::vector<hull::Coordinate> result;
-  result.reserve(faces.size());
-  for (const auto &face : faces) {
-    result.push_back(face->normal);
-  }
-  return result;
-}
-} // namespace
+    std::vector<hull::Coordinate> get_normals(const hull::Facets &faces) {
+      std::vector<hull::Coordinate> result;
+      result.reserve(faces.size());
+      for (const auto &face : faces) {
+        result.push_back(face->normal);
+      }
+      return result;
+    }
+    } // namespace
 
-std::vector<FacetIncidences>
-convex_hull(const std::vector<hull::Coordinate> &points,
-            const ConvexHullContext &cntx) {
-  PointCloud cloud(points);
-  HullIndexVSPointCloudIndexMap indices_map;
-  auto hull = convex_hull_(cloud, cntx, indices_map);
-  return get_indices(hull.getFacets(), indices_map);
-}
+    std::vector<FacetIncidences>
+    convex_hull(const std::vector<hull::Coordinate> &points,
+                const ConvexHullContext &cntx) {
+      PointCloud cloud(points);
+      HullIndexVSPointCloudIndexMap indices_map;
+      auto hull = convex_hull_(cloud, cntx, indices_map);
+      return get_indices(hull.getFacets(), indices_map);
+    }
 
-std::vector<FacetIncidences>
-convex_hull(const std::vector<hull::Coordinate> &points,
-            std::vector<hull::Coordinate> &convex_hull_normals,
-            const ConvexHullContext &cntx) {
-  PointCloud cloud(points);
-  HullIndexVSPointCloudIndexMap indices_map;
-  auto hull = convex_hull_(cloud, cntx, indices_map);
-  convex_hull_normals = get_normals(hull.getFacets());
-  return get_indices(hull.getFacets(), indices_map);
-}
+    std::vector<FacetIncidences>
+    convex_hull(const std::vector<hull::Coordinate> &points,
+                std::vector<hull::Coordinate> &convex_hull_normals,
+                const ConvexHullContext &cntx) {
+      PointCloud cloud(points);
+      HullIndexVSPointCloudIndexMap indices_map;
+      auto hull = convex_hull_(cloud, cntx, indices_map);
+      convex_hull_normals = get_normals(hull.getFacets());
+      return get_indices(hull.getFacets(), indices_map);
+    }
 
 } // namespace qh

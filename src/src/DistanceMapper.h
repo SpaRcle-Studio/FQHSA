@@ -5,7 +5,8 @@
  * report any bug to andrecasa91@gmail.com.
  **/
 
-#pragma once
+#ifndef QH_DISTANCEMAPPER_H
+#define QH_DISTANCEMAPPER_H
 
 #include <Hull/Hull.h>
 #include <QuickHull/FastQuickHull.h>
@@ -17,37 +18,39 @@
 #include <mutex>
 
 namespace qh {
-struct FacetAndFarthestVertex {
-  const hull::Facet *facet;
-  std::size_t vertex_index;
-};
-using DistancesFacetsMap =
-    std::multimap<float, FacetAndFarthestVertex, std::greater<float>>;
+    struct FacetAndFarthestVertex {
+      const hull::Facet *facet;
+      std::size_t vertex_index;
+    };
+    using DistancesFacetsMap =
+        std::multimap<float, FacetAndFarthestVertex, std::greater<float>>;
 
-class DistanceMapper : public hull::Observer {
-public:
-  DistanceMapper(const PointCloud &cloud) : cloud(cloud){};
+    class DistanceMapper : public hull::Observer {
+    public:
+      DistanceMapper(const PointCloud &cloud) : cloud(cloud){};
 
-  void update();
+      void update();
 
-  const DistancesFacetsMap &getDistancesFacetsMap() const {
-    return distances_facets_map;
-  };
+      const DistancesFacetsMap &getDistancesFacetsMap() const {
+        return distances_facets_map;
+      };
 
-protected:
-  const PointCloud &cloud;
+    protected:
+      const PointCloud &cloud;
 
-  std::unique_ptr<Notification> last_notification;
-  void hullChanges(Notification &&notification) override {
-    last_notification = std::make_unique<Notification>(std::move(notification));
-  };
+      std::unique_ptr<Notification> last_notification;
+      void hullChanges(Notification &&notification) override {
+        last_notification = std::make_unique<Notification>(std::move(notification));
+      };
 
-  void updateAddedFacet(const hull::Facet *facet);
-  void updateChangedFacet(const hull::Facet *facet);
-  void updateRemovedFacet(const hull::Facet *facet);
+      void updateAddedFacet(const hull::Facet *facet);
+      void updateChangedFacet(const hull::Facet *facet);
+      void updateRemovedFacet(const hull::Facet *facet);
 
-  std::mutex maps_mtx;
-  DistancesFacetsMap distances_facets_map;
-  std::map<const hull::Facet *, float> facets_distances_map;
-};
+      std::mutex maps_mtx;
+      DistancesFacetsMap distances_facets_map;
+      std::map<const hull::Facet *, float> facets_distances_map;
+    };
 } // namespace qh
+
+#endif //QH_DISTANCEMAPPER_H

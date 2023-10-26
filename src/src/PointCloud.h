@@ -1,4 +1,5 @@
-#pragma once
+#ifndef QH_POINT_CLOUD_H
+#define QH_POINT_CLOUD_H
 
 #include <Hull/Coordinate.h>
 
@@ -32,3 +33,5 @@ private:
   std::vector<bool> points_still_free;
 };
 } // namespace qh
+
+#endif //QH_POINT_CLOUD_H
