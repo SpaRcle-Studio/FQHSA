@@ -9,7 +9,6 @@ Hull
 )
 
 find_package(OpenMP)
-target_link_libraries(${PROJECT_SHORTNAME}  PRIVATE
-	OpenMP::OpenMP_CXX
-)
-
+if(OpenMP_CXX_FOUND)
+	target_link_libraries(${PROJECT_SHORTNAME} PRIVATE OpenMP::OpenMP_CXX)
+endif()
